@@ -1,26 +1,99 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      timeStamp: 0,
+      timer: 0,
+      showForm: false,
+      exerciseName: '',
+      exerciseType: '',
+      exercise: [],
+      sessionInfo: [],
+      timerRunning:true,
+    }
+  }
+
+  componentDidMount() {
+    const time = new Date()
+    this.setState({ timeStamp: time })
+  }
+
+  createExercise = () => {
+    this.setState({
+      exercise: {
+        exerciseName: this.state.exerciseName,
+        exerciseType: this.state.exerciseType,
+        set: 0,
+        reps: 0,
+        weight: 0,
+        duration: 0
+      },
+      showForm:false
+    })
+  }
+
+  timer = () => {
+    let startTime = Date.now();
+    let interval = setInterval(() => {
+      let newTime =  startTime - Date.now()
+      newTime.toFixed(3)
+      this.setState({ timer: newTime/1000})
+    }, 100);
+
+    if(this.state.timerRunning){}
+    else{clearInterval(interval)}
+  }
+
+  timerStop = () => {
+  this.setState({timerRunning:false})
+  }
+
+
+  toggleForm = () => {
+    this.setState({ showForm: true })
+  }
+
+
+  render() {
+    console.log(this.state.timeStamp)
+    // const day = this.state.timeStamp.getDay()
+    return (
+      <div >
+        <h1>Welcome!</h1>
+        {/* {day} */}
+        <div>
+          <button onClick={() => this.toggleForm()} >Add Exercise</button>
+        </div>
+        {
+          this.state.showForm ?
+            <div>
+              <label htmlFor='exercise-name' >Name:</label>
+              <input name='exercise-name' type='text' onChange={(e) => this.setState({ exerciseName: e.target.value })} />
+              <label htmlFor='exercise-type' >Type:</label>
+              <select name='exercise-type' onChange={(e) => this.setState({ exerciseType: e.target.value })}>
+                <option value='dumbbell'>Dumbbell</option>
+                <option value='barbell'>Barbell</option>
+                <option value='bodyweight'>BodyWeight</option>
+                <option value='machine'>Machine</option>
+                <option value='assisted'>Assisted</option>
+              </select>
+              <button onClick={() => this.createExercise()}>Next</button>
+            </div> :
+            null
+        }
+
+        <button onClick={() => this.timer()} >Start</button>
+        <button onClick={() => this.timerStop()} >Stop</button>
+        {this.state.timer}
+
+
+      </div>
+    );
+  }
 }
+
 
 export default App;
