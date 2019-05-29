@@ -18,9 +18,11 @@ export default function nav() {
             <Link to='/stats'>Progress</Link>
           </li>
       </ul>
+        <Link to='/account' >
       <div className='user-icon'>
-
+        
       </div>
+        </Link>
     </div>
   )
 }

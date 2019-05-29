@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 class App extends React.Component {
+  intervalId = 0
   constructor(props) {
     super(props)
     this.state = {
@@ -37,18 +38,15 @@ class App extends React.Component {
 
   timer = () => {
     let startTime = Date.now();
-    let interval = setInterval(() => {
-      let newTime =  startTime - Date.now()
+    this.intervalId = setInterval(() => {
+      let newTime =  Date.now() - startTime
       newTime.toFixed(3)
       this.setState({ timer: newTime/1000})
     }, 100);
-
-    if(this.state.timerRunning){}
-    else{clearInterval(interval)}
   }
 
   timerStop = () => {
-  this.setState({timerRunning:false})
+  clearInterval(this.intervalId)
   }
 
 
@@ -61,7 +59,7 @@ class App extends React.Component {
     console.log(this.state.timeStamp)
     // const day = this.state.timeStamp.getDay()
     return (
-      <div >
+      <div className='wrapper'>
         <h1>Welcome!</h1>
         {/* {day} */}
         <div>
@@ -79,6 +77,7 @@ class App extends React.Component {
                 <option value='bodyweight'>BodyWeight</option>
                 <option value='machine'>Machine</option>
                 <option value='assisted'>Assisted</option>
+                <option value='cable'>Cable</option>
               </select>
               <button onClick={() => this.createExercise()}>Next</button>
             </div> :
@@ -87,7 +86,9 @@ class App extends React.Component {
 
         <button onClick={() => this.timer()} >Start</button>
         <button onClick={() => this.timerStop()} >Stop</button>
+        <div className='timer-box' >
         {this.state.timer}
+        </div>
 
 
       </div>
