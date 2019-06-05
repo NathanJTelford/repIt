@@ -44,6 +44,7 @@ code {
   justify-content: space-around;
   height: 6vh;
   background: red;
+  border-bottom: black 1px solid;
   ul{
     display: flex;
     justify-content: space-between;
@@ -87,6 +88,7 @@ code {
     font-size: 2rem;
     width:50vw;
     height: 3rem;
+    border-style: groove;
   
   }
 }

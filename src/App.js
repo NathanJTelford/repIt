@@ -14,6 +14,7 @@ class App extends React.Component {
       exercise: [],
       sessionInfo: [],
       timerRunning:true,
+      toggleClear:false,
     }
   }
 
@@ -22,16 +23,17 @@ class App extends React.Component {
     this.setState({ timeStamp: time })
   }
 
-  createExercise = () => {
-    this.setState({
-      exercise: {
-        exerciseName: this.state.exerciseName,
-        exerciseType: this.state.exerciseType,
-        set: 0,
-        reps: 0,
-        weight: 0,
-        duration: 0
-      },
+  createExercise = async () => {
+    const type = await { 
+      exerciseName: this.state.exerciseName,
+      exerciseType: this.state.exerciseType,
+      set: 0,
+      reps: 0,
+      weight: 0,
+      duration: 0
+    }
+     const newObj = await [...this.state.exercise,type]
+    this.setState({exercise:newObj,
       showForm:false
     })
   }
@@ -43,10 +45,16 @@ class App extends React.Component {
       newTime.toFixed(3)
       this.setState({ timer: newTime/1000})
     }, 100);
+    this.setState({toggleClear:false})
   }
 
   timerStop = () => {
   clearInterval(this.intervalId)
+  this.setState({toggleClear:true})
+  }
+
+  toggleClear = ()=>{
+    this.setState({})
   }
 
 
@@ -56,8 +64,15 @@ class App extends React.Component {
 
 
   render() {
-    console.log(this.state.timeStamp)
-    // const day = this.state.timeStamp.getDay()
+    let gymPlan = this.state.exercise.map((exercise,i)=>{
+      return<div key={i}>
+        <p>{exercise.exerciseName}</p>
+        <p>{exercise.exerciseType}</p>
+        <p>Set: {exercise.set} Reps: {exercise.reps}</p>
+        <p>Weight: {exercise.weight} Duration: {exercise.duration}</p>
+
+      </div>
+    })
     return (
       <div className='wrapper'>
         <h1>Welcome!</h1>
@@ -72,6 +87,7 @@ class App extends React.Component {
               <input name='exercise-name' type='text' onChange={(e) => this.setState({ exerciseName: e.target.value })} />
               <label htmlFor='exercise-type' >Type:</label>
               <select name='exercise-type' onChange={(e) => this.setState({ exerciseType: e.target.value })}>
+                <option value='null'>Please select type</option>
                 <option value='dumbbell'>Dumbbell</option>
                 <option value='barbell'>Barbell</option>
                 <option value='bodyweight'>BodyWeight</option>
@@ -85,11 +101,16 @@ class App extends React.Component {
         }
 
         <button onClick={() => this.timer()} >Start</button>
-        <button onClick={() => this.timerStop()} >Stop</button>
+        {
+          this.state.toggleClear ?
+          <button onClick={()=>this.setState({timer:0})} >Clear</button>
+          :
+          <button onClick={() => this.timerStop()} >Stop</button>
+        }
         <div className='timer-box' >
         {this.state.timer}
         </div>
-
+        <div>{gymPlan}</div>
 
       </div>
     );
